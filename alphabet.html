@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="ar">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تعليم الحروف - كي جي</title>
+<style>
+  body{font-family: "Segoe UI", Tahoma, Arial; direction: rtl; text-align: center; padding: 12px; background:#f8f9fb}
+  h1{margin:6px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;max-width:760px;margin:0 auto}
+  .card{background:white;border-radius:8px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);cursor:pointer}
+  .letter{font-size:28px;font-weight:700}
+  .example{font-size:12px;color:#555;margin-top:6px}
+  .controls{margin:14px 0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  button{padding:8px 12px;border-radius:8px;border:0;background:#0b5ed7;color:white;cursor:pointer}
+  button.secondary{background:#6c757d}
+  #big{font-size:84px;margin:18px 0}
+  .quizBox{max-width:420px;margin:0 auto;background:#fff;padding:14px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  .option{display:block;margin:8px 0;padding:8px;border-radius:8px;background:#eef2ff;cursor:pointer}
+  .hidden{display:none}
+</style>
+</head>
+<body>
+  <h1>تعليم الحروف للأطفال — كي جي</h1>
+  <div class="controls">
+    <button id="speakAll">شغل النطق لكل حرف</button>
+    <button id="startQuiz">ابدأ اختبار</button>
+    <button id="shuffle" class="secondary">خلط الحروف</button>
+  </div>
+
+  <div id="big" class="hidden"></div>
+
+  <div id="grid" class="grid"></div>
+
+  <!-- Quiz UI -->
+  <div id="quiz" class="hidden quizBox">
+    <p id="quizPrompt">استمع للصوت واختر الحرف الصحيح</p>
+    <button id="playSound">🔊 استمع</button>
+    <div id="options"></div>
+    <p id="score" style="margin-top:8px"></p>
+    <div style="margin-top:8px">
+      <button id="nextQ" class="secondary">السؤال التالي</button>
+      <button id="endQuiz" class="secondary">انهي الاختبار</button>
+    </div>
+  </div>
+
+<script>
+// بيانات الحروف (28 حرف) + مثال كلمة قصيرة (يمكن تعديل/إضافة صور لاحقاً)
+const letters = [
+  {ltr:'ا', word:'أسد'}, {ltr:'ب', word:'باب'}, {ltr:'ت', word:'تفاح'},
+  {ltr:'ث', word:'ثعلب'}, {ltr:'ج', word:'جمل'}, {ltr:'ح', word:'حصان'},
+  {ltr:'خ', word:'خبز'}, {ltr:'د', word:'دب'}, {ltr:'ذ', word:'ذهب'},
+  {ltr:'ر', word:'رمان'}, {ltr:'ز', word:'زرافة'}, {ltr:'س', word:'سمك'},
+  {ltr:'ش', word:'شمعة'}, {ltr:'ص', word:'صقر'}, {ltr:'ض', word:'ضفدع'},
+  {ltr:'ط', word:'طائر'}, {ltr:'ظ', word:'ظرف'}, {ltr:'ع', word:'عنب'},
+  {ltr:'غ', word:'غزال'}, {ltr:'ف', word:'فيل'}, {ltr:'ق', word:'قمر'},
+  {ltr:'ك', word:'كتاب'}, {ltr:'ل', word:'ليمون'}, {ltr:'م', word:'موز'},
+  {ltr:'ن', word:'نمل'}, {ltr:'ه', word:'هدهد'}, {ltr:'و', word:'وردة'},
+  {ltr:'ي', word:'يقطين'}
+];
+
+const grid = document.getElementById('grid');
+const big = document.getElementById('big');
+const synth = window.speechSynthesis;
+
+// أنشئ بطاقات الحروف
+function renderGrid(arr){
+  grid.innerHTML = '';
+  arr.forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `<div class="letter">${item.ltr}</div><div class="example">${item.word}</div>`;
+    card.onclick = () => { showBig(item); speakText(item.ltr + ' ... ' + item.word); };
+    grid.appendChild(card);
+  });
+}
+renderGrid(letters);
+
+// عرض حرف كبير
+function showBig(item){
+  big.classList.remove('hidden');
+  big.textContent = item.ltr;
+  setTimeout(()=> big.classList.add('hidden'), 2500);
+}
+
+// نطق باستخدام Web Speech API (تأكد أن المتصفح يدعم العربية)
+function speakText(text){
+  if(!('speechSynthesis' in window)) return alert('جهازك لا يدعم النطق التلقائي');
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ar-SA';
+  u.rate = 0.9;
+  u.pitch = 1;
+  synth.speak(u);
+}
+
+// زر شغل النطق لكل حرف متتالياً
+document.getElementById('speakAll').onclick = async () => {
+  for(const item of letters){
+    speakText(item.ltr + ' ... ' + item.word);
+    // نفصل زمنيًا بين كل حرف
+    await new Promise(r => setTimeout(r, 900));
+  }
+};
+
+// خلط الحروف
+document.getElementById('shuffle').onclick = () => {
+  const shuffled = [...letters].sort(()=>Math.random()-0.5);
+  renderGrid(shuffled);
+};
+
+// ------ Quiz بسيط ------
+const quizBox = document.getElementById('quiz');
+const startQuizBtn = document.getElementById('startQuiz');
+const playSoundBtn = document.getElementById('playSound');
+const optionsDiv = document.getElementById('options');
+const scoreP = document.getElementById('score');
+const nextQ = document.getElementById('nextQ');
+const endQuiz = document.getElementById('endQuiz');
+
+let quizState = {questions:[], current:0, score:0};
+
+// انشاء أسئلة (مثال: 8 أسئلة)
+function prepareQuiz(num=8){
+  const pool = [...letters];
+  const qs = [];
+  for(let i=0;i<num;i++){
+    if(pool.length===0) pool.push(...letters);
+    const correct = pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+    // اختر 3 خيارات خاطئة
+    const wrongs = [];
+    while(wrongs.length<3){
+      const cand = letters[Math.floor(Math.random()*letters.length)];
+      if(cand.ltr !== correct.ltr && !wrongs.includes(cand)) wrongs.push(cand);
+    }
+    const choices = [correct, ...wrongs].sort(()=>Math.random()-0.5);
+    qs.push({correct, choices});
+  }
+  return qs;
+}
+
+function startQuiz(){
+  quizState.questions = prepareQuiz(8);
+  quizState.current = 0;
+  quizState.score = 0;
+  quizBox.classList.remove('hidden');
+  grid.classList.add('hidden');
+  showQuestion();
+}
+
+function showQuestion(){
+  const q = quizState.questions[quizState.current];
+  optionsDiv.innerHTML = '';
+  q.choices.forEach(c=>{
+    const b = document.createElement('button');
+    b.className='option';
+    b.textContent = c.ltr + ' — ' + c.word;
+    b.onclick = () => selectOption(c);
+    optionsDiv.appendChild(b);
+  });
+  scoreP.textContent = `السؤال ${quizState.current+1} من ${quizState.questions.length} — نقاط: ${quizState.score}`;
+  // شغل الصوت تلقائياً
+  speakPlayCorrect();
+}
+
+function speakPlayCorrect(){
+  const q = quizState.questions[quizState.current];
+  // نطق الكلمة أو الحرف فقط (هنا نطق الكلمة لتدريب السمع)
+  speakText(q.correct.word);
+}
+
+function selectOption(choice){
+  const q = quizState.questions[quizState.current];
+  if(choice.ltr === q.correct.ltr){
+    quizState.score++;
+    alert('صحيح! 👍');
+  } else {
+    alert('خطأ — الحرف الصحيح: ' + q.correct.ltr + ' (' + q.correct.word + ')');
+  }
+  // إما ننتقل للسؤال التالي أو ننهي
+}
+
+playSoundBtn.onclick = () => speakPlayCorrect();
+
+nextQ.onclick = () => {
+  quizState.current++;
+  if(quizState.current >= quizState.questions.length){
+    alert('انتهى الاختبار. مجموع نقاطك: ' + quizState.score + ' من ' + quizState.questions.length);
+    endQuizFunc();
+    return;
+  }
+  showQuestion();
+};
+
+endQuiz.onclick = () => endQuizFunc();
+
+function endQuizFunc(){
+  quizBox.classList.add('hidden');
+  grid.classList.remove('hidden');
+}
+
+startQuizBtn.onclick = startQuiz;
+
+</script>
+</body>
+</html>
