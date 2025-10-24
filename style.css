@@ -1,0 +1,162 @@
+/* ========== Global ========== */
+body {
+  font-family: "Comic Neue", "Segoe UI", Tahoma, Arial;
+  direction: rtl;
+  text-align: center;
+  padding: 12px;
+  background: linear-gradient(180deg, #fffbf0 0%, #fff8f3 100%);
+  margin: 0;
+  color: #333;
+  overflow-x: hidden;
+}
+
+h1 {
+  margin: 10px 0 18px;
+  color: #ff6b6b;
+  font-size: 26px;
+  font-weight: 700;
+  text-shadow: 1px 1px 0 #fff;
+}
+
+/* ========== Buttons and Controls ========== */
+.controls {
+  margin: 16px 0 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 10px 16px;
+  border-radius: 14px;
+  border: none;
+  background: #ffb703;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: #ffa500;
+}
+
+button.secondary {
+  background: #48bfe3;
+}
+
+button.secondary:hover {
+  background: #0096c7;
+}
+
+/* ========== Grid and Cards ========== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: scale(1.08);
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+  border-color: #ffd166;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ffd6a5, #caffbf, #9bf6ff, #bdb2ff);
+  opacity: 0.15;
+  z-index: 0;
+}
+
+.letter {
+  font-size: 34px;
+  font-weight: 700;
+  color: #023047;
+  position: relative;
+  z-index: 1;
+}
+
+.example {
+  font-size: 14px;
+  color: #555;
+  margin-top: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== Big Letter Display ========== */
+#big {
+  font-size: 100px;
+  margin: 24px 0;
+  color: #ff6b6b;
+  font-weight: bold;
+  animation: pop 0.5s ease forwards;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ========== Quiz Box ========== */
+.quizBox {
+  max-width: 420px;
+  margin: 0 auto;
+  background: #ffffffcc;
+  padding: 16px 20px;
+  border-radius: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border: 3px solid #ffd166;
+}
+
+.quizBox p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #444;
+}
+
+.option {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #caffbf;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 18px;
+  transition: all 0.25s ease;
+  border: none;
+}
+
+.option:hover {
+  background: #9bf6ff;
+  transform: translateY(-2px);
+}
+
+/* ========== Utility ========== */
+.hidden {
+  display: none;
+}

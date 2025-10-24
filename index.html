@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>تعليم الحروف - كي جي</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>تعليم الحروف للأطفال — كي جي</h1>
+
+  <div class="controls">
+    <button id="speakAll">شغل النطق لكل حرف</button>
+    <button id="startQuiz">ابدأ اختبار</button>
+    <button id="shuffle" class="secondary">خلط الحروف</button>
+  </div>
+
+  <div id="big" class="hidden"></div>
+
+  <div id="grid" class="grid"></div>
+
+  <!-- Quiz UI -->
+  <div id="quiz" class="hidden quizBox">
+    <p id="quizPrompt">استمع للصوت واختر الحرف الصحيح</p>
+    <button id="playSound">🔊 استمع</button>
+    <div id="options"></div>
+    <p id="score" style="margin-top:8px"></p>
+    <div style="margin-top:8px">
+      <button id="nextQ" class="secondary">السؤال التالي</button>
+      <button id="endQuiz" class="secondary">انهي الاختبار</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
